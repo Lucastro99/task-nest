@@ -9,14 +9,20 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from '../entities/task.entity';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: Task): Promise<Task> {
-    return this.tasksService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    const task = new Task();
+    task.title = createTaskDto.title;
+    task.description = createTaskDto.description;
+    task.status = createTaskDto.status;
+
+    return this.tasksService.create(task);
   }
 
   @Get()
