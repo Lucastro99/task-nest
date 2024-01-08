@@ -10,10 +10,14 @@ import {
 import { TasksService } from './tasks.service';
 import { Task } from '../entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { EventsService } from './events.service';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly eventsService: EventsService,
+  ) {}
 
   @Post()
   async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
@@ -22,7 +26,11 @@ export class TasksController {
     task.description = createTaskDto.description;
     task.status = createTaskDto.status;
 
-    return this.tasksService.create(task);
+    const createdTask = await this.tasksService.create(task);
+
+    this.eventsService.emitTaskCreated(createdTask);
+
+    return createdTask;
   }
 
   @Get()

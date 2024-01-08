@@ -6,7 +6,9 @@ import { Task } from './entities/task.entity';
 import { TasksController } from './tasks/tasks.controller';
 import { TasksService } from './tasks/tasks.service';
 import { GzipMiddleware } from './middleware/gzip.middleware';
-
+import { EventsService } from './tasks/events.service';
+import { TaskCreatedObserver } from './tasks/task-created.observer';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,9 +22,10 @@ import { GzipMiddleware } from './middleware/gzip.middleware';
       entities: [Task],
     }),
     TypeOrmModule.forFeature([Task]),
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController, TasksController],
-  providers: [AppService, TasksService],
+  providers: [AppService, TasksService, EventsService, TaskCreatedObserver],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
