@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Task } from './entities/task.entity';
 import { TasksController } from './tasks/tasks.controller';
 import { TasksService } from './tasks/tasks.service';
+import { GzipMiddleware } from './middleware/gzip.middleware';
 
 @Module({
   imports: [
@@ -23,4 +24,8 @@ import { TasksService } from './tasks/tasks.service';
   controllers: [AppController, TasksController],
   providers: [AppService, TasksService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(GzipMiddleware).forRoutes('*');
+  }
+}
