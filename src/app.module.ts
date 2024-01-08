@@ -13,11 +13,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
+      host: 'sql5.freemysqlhosting.net',
       port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'nest',
+      username: 'sql5675541',
+      password: 'ERlaaFsc5k',
+      database: 'sql5675541',
       synchronize: true,
       entities: [Task],
     }),
